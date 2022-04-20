@@ -408,54 +408,54 @@ keyitemlist = [[2, 'COLD STEAK', 5],
  [994, 'FA Polaroid 44', 5]]
  
 
-weaponlist = [[2, 'SHINY KNIFE'],
- [3, 'KNIFE'],
- [4, 'DULL KNIFE'],
- [5, 'RUSTY KNIFE'],
- [6, 'RED KNIFE'],
- [8, 'FLY SWATTER'],
- [9, 'HANDS'],
- [10, 'VIOLIN'],
- [11, 'VIOLIN'],
- [12, 'VIOLIN'],
- [14, 'STUFFED TOY'],
- [15, 'COMET HAMMER'],
- [16, 'BODY PILLOW'],
- [17, 'POOL NOODLE'],
- [18, 'COOL NOODLE'],
- [19, "HERO'S TROPHY"],
- [20, 'MAILBOX'],
- [21, 'BAGUETTE'],
- [22, 'BASEBALL BAT'],
- [23, 'LOL SWORD'],
- [25, 'NAIL BAT'],
- [28, 'RUBBER BALL'],
- [29, 'METEOR BALL'],
- [30, 'BLOOD ORANGE'],
- [31, 'JACK'],
- [32, 'BEACH BALL'],
- [33, 'COCONUT'],
- [34, 'GLOBE'],
- [35, 'CHICKEN BALL'],
- [36, 'SNOWBALL'],
- [37, 'BASKETBALL'],
- [42, 'BASKETBALL'],
- [45, 'SPATULA'],
- [46, 'ROLLING PIN'],
- [47, 'TEAPOT'],
- [48, 'FRYING PAN'],
- [49, 'BLENDER'],
- [50, 'BAKING PAN'],
- [51, 'TENDERIZER'],
- [52, "OL' RELIABLE"],
- [53, 'SHUCKER'],
- [55, 'FIST'],
- [61, 'STEAK KNIFE'],
- [62, 'SWEETHEART BUST'],
- [110, 'STEAK KNIFE'],
- [112, 'SHINY KNIFE'],
- [113, 'KNIFE'],
- [114, 'DULL KNIFE']]
+weaponlist = [[2, 'SHINY KNIFE', False],
+ [3, 'KNIFE', False],
+ [4, 'DULL KNIFE', False],
+ [5, 'RUSTY KNIFE', False],
+ [6, 'RED KNIFE', False],
+ [8, 'FLY SWATTER', False],
+ [9, 'HANDS', False],
+ [10, 'VIOLIN', False],
+ [11, 'VIOLIN', False],
+ [12, 'VIOLIN', False],
+ [14, 'STUFFED TOY', False],
+ [15, 'COMET HAMMER', False],
+ [16, 'BODY PILLOW', False],
+ [17, 'POOL NOODLE', False],
+ [18, 'COOL NOODLE', False],
+ [19, "HERO'S TROPHY", False],
+ [20, 'MAILBOX', False],
+ [21, 'BAGUETTE', False],
+ [22, 'BASEBALL BAT', False],
+ [23, 'LOL SWORD', False],
+ [25, 'NAIL BAT', False],
+ [28, 'RUBBER BALL', False],
+ [29, 'METEOR BALL', False],
+ [30, 'BLOOD ORANGE', False],
+ [31, 'JACK', False],
+ [32, 'BEACH BALL', False],
+ [33, 'COCONUT', False],
+ [34, 'GLOBE', False],
+ [35, 'CHICKEN BALL', False],
+ [36, 'SNOWBALL', False],
+ [37, 'BASKETBALL', False],
+ [42, 'BASKETBALL', False],
+ [45, 'SPATULA', False],
+ [46, 'ROLLING PIN', False],
+ [47, 'TEAPOT', False],
+ [48, 'FRYING PAN', False],
+ [49, 'BLENDER', False],
+ [50, 'BAKING PAN', False],
+ [51, 'TENDERIZER', False],
+ [52, "OL' RELIABLE", False],
+ [53, 'SHUCKER', False],
+ [55, 'FIST', False],
+ [61, 'STEAK KNIFE', False],
+ [62, 'SWEETHEART BUST', False],
+ [110, 'STEAK KNIFE', False],
+ [112, 'SHINY KNIFE', False],
+ [113, 'KNIFE', False],
+ [114, 'DULL KNIFE', False]]
 
 armorlist = [[2, '"GOLD" WATCH'],
  [4, '3D GLASSES'],
@@ -571,15 +571,22 @@ msg_dict = {}
 
 def randomSelect():
 
-    randSelectList = random.randint(0, 2)
-    if randSelectList == 0:
-        randList = itemlist
-    elif randSelectList == 1:
-        randList = weaponlist
-    elif randSelectList == 2:
-        randList = armorlist
+    while True:
+        randSelectList = random.randint(0, 2)
+        if randSelectList == 0:
+            randList = itemlist
+        elif randSelectList == 1:
+            randList = weaponlist
+        elif randSelectList == 2:
+            randList = armorlist
     
-    randSelectInner = random.randint(0, len(randList) - 1)
+        randSelectInner = random.randint(0, len(randList) - 1)
+        if randSelectList == 1:
+            if randList[randSelectInner][2] == False:
+                randList[randSelectInner][2] = True
+                break
+        else:
+            break
 
     return (randList[randSelectInner][0], randList[randSelectInner][1] ,randSelectList)
 
@@ -623,15 +630,14 @@ def edit_yaml_value(y, splitList, itemName):
 
 def edit_yaml(y):
     for msg, itemName in msg_dict.items():
-            splitList = msg.split(".")
-            yam = f'{splitList[0]}.yaml'
-            if y == yam:
-                data = edit_yaml_value(y, splitList, itemName)
-                if data != None:
-                    with open(os.path.join(paths.yamlrandopath, y), 'w', encoding='utf-8') as updatedYaml:
-                        yaml.dump(data, updatedYaml)
-                        return f'{y} updated!'
-    return ' '
+        splitList = msg.split(".")
+        yam = f'{splitList[0]}.yaml'
+        if y == yam:
+            data = edit_yaml_value(y, splitList, itemName)
+            if data != None:
+                with open(os.path.join(paths.yamlrandopath, y), 'w', encoding='utf-8') as updatedYaml:
+                    yaml.dump(data, updatedYaml)
+    return f'{y} updated!'
 
 def randomize_map_data(file):
     if file.startswith("Map"):
@@ -652,9 +658,10 @@ def randomize_map_data(file):
                                     for item in page['list']:                                        
                                         if item['code'] == 356:
                                             if item['parameters'][0].startswith("ShowMessage "):
+                                                nextLastMsg = lastMsg
                                                 lastMsg = item['parameters'][0].split(" ")[1]
                                                 if (toYamlCounter <= 2 and lastItemName != ""):
-                                                    if not lastMsg in msg_dict.keys():
+                                                    if lastMsg not in msg_dict.keys():
                                                         msg_dict[lastMsg] = lastItemName
                                                         toYamlCounter = 0
                                         if item['code'] == 126:
@@ -668,11 +675,11 @@ def randomize_map_data(file):
                                                     item['parameters'][0] = itemID
                                                     lastItemName = itemName
                                                     toYamlCounter += 1
-                                                    if (lastMsg != "" and not lastMsg in msg_dict.keys() and toYamlCounter <= 2):
+                                                    if (lastMsg != "" and lastMsg not in msg_dict.keys() and toYamlCounter <= 2):
                                                         msg_dict[lastMsg] = lastItemName                                                                                                                                                                        
                                         elif item['code'] == 127:
                                             if item['parameters'][1] == 0:
-                                                if item['parameters'][0] not in [2, 10, 11, 12, 14, 61, 110]:
+                                                if item['parameters'][0] not in [2, 10, 11, 12, 14, 61, 110, 113]:
                                                     itemID, itemName, listType = randomSelect()
                                                     if listType == 0:
                                                         item['code'] = 126
@@ -681,7 +688,7 @@ def randomize_map_data(file):
                                                     item['parameters'][0] = itemID
                                                     lastItemName = itemName
                                                     toYamlCounter += 1
-                                                    if (lastMsg != "" and not lastMsg in msg_dict.keys() and toYamlCounter <= 2):
+                                                    if (lastMsg != "" and lastMsg not in msg_dict.keys() and toYamlCounter <= 2):
                                                         msg_dict[lastMsg] = lastItemName   
                                         elif item['code'] == 128:
                                             if item['parameters'][1] == 0:
@@ -693,8 +700,10 @@ def randomize_map_data(file):
                                                 item['parameters'][0] = itemID
                                                 lastItemName = itemName
                                                 toYamlCounter += 1
-                                                if (lastMsg != "" and not lastMsg in msg_dict.keys() and toYamlCounter <= 2):
+                                                if (lastMsg != "" and lastMsg not in msg_dict.keys() and toYamlCounter <= 2):                                                    
                                                     msg_dict[lastMsg] = lastItemName
+                                                elif lastMsg == "sidequest_dreamworld_rabbitkiller.message_16":
+                                                        msg_dict[nextLastMsg] = lastItemName
                                         elif item['code'] in [302, 605]:
                                             if event['id'] == 71:
                                                 if item['code'] == 302:
@@ -863,7 +872,7 @@ if __name__ == '__main__':
                     [sg.Button('Close', key='closebutton')] ]
 
         # Create the Window
-        window = sg.Window('OMORI Randomizer v0.13.1a', layout, finalize=True)
+        window = sg.Window('OMORI Randomizer v0.13.2a', layout, finalize=True)
         progress_text = window['progtext']
         folder_field = window['folderinput']
         randomize_button = window['randobutton']

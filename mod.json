@@ -2,9 +2,9 @@
     "id": "randomizeralpha",
     "name": "Randomizer Alpha",
     "description": "Wytama's first randomizer! Hello world!",
-    "version": "0.13.1a",
+    "version": "0.13.2a",
     "files": {
-      "plugins": ["ac9eb0f9-4f04-4a25-a65e-aa5eb0772391.js", "Omori BASE.js"],
+      "plugins": ["ac9eb0f9-4f04-4a25-a65e-aa5eb0772391.js", "Omori BASE.js", "CheckLoad.js"],
       "text": ["randomized_text/"],
       "data": ["randomized_data/"],
       "maps": [],

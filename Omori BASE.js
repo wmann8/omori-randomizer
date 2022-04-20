@@ -1934,42 +1934,45 @@ Game_Party.prototype.initWorldItemsContainer = function() {
 //=============================================================================
 // * Change Worlds Item container
 //=============================================================================
-// Game_Party.prototype.changeWorldItemContainer = function(world = SceneManager.currentWorldIndex()) {
-//   // Get Last Container & New Container
-//   var lastContainer = this._worldItemsContainer[this._lastWorldItemIndex];
-//   var newContainer = this._worldItemsContainer[world];
-//   // Save current to current container
-//   Object.assign(lastContainer.items, this._items);
-//   Object.assign(lastContainer.weapons, this._weapons);
-//   Object.assign(lastContainer.armors, this._armors);
-//   // Set Item Lists
-//   this._items = newContainer.items;
-//   this._weapons = newContainer.weapons;
-//   this._armors = newContainer.armors;
-//   // Update Last World Item Index
-//   this._lastWorldItemIndex = world;
-//   // Get Containers
-//   var containers = [[this._items, $dataItems], [this._weapons, $dataWeapons], [this._armors, $dataArmors]];
-//   // Go through Containers
-//   for (var i = 0; i < containers.length; i++) {
-//     // Get List
-//     var container = containers[i][0];
-//     var itemData = containers[i][1];
-//     var list = Object.keys(container);
-//     // Go through container list
-//     for (var i2 = 0; i2 < list.length; i2++) {
-//       // Get ID
-//       var id = list[i2];
-//       // Get Item
-//       var item = itemData[id];
-//       // If Item exists but does not match the world index
-//       if (item && item.meta.WorldIndex && Number(item.meta.WorldIndex) !== world) {
-//         // Delete Item from container
-//         delete container[id];
-//       };
-//     };
-//   };
-// };
+
+Game_Party.prototype.changeWorldItemContainer = function(world = SceneManager.currentWorldIndex()) {
+  if(world == 1){
+      // Get Last Container & New Container
+    var lastContainer = this._worldItemsContainer[this._lastWorldItemIndex];
+    var newContainer = this._worldItemsContainer[world];
+    // Save current to current container
+    Object.assign(lastContainer.items, this._items);
+    Object.assign(lastContainer.weapons, this._weapons);
+    Object.assign(lastContainer.armors, this._armors);
+    // Set Item Lists
+    this._items = newContainer.items;
+    this._weapons = newContainer.weapons;
+    this._armors = newContainer.armors;
+    // Update Last World Item Index
+    this._lastWorldItemIndex = world;
+    // Get Containers
+    var containers = [[this._items, $dataItems], [this._weapons, $dataWeapons], [this._armors, $dataArmors]];
+    // Go through Containers
+    for (var i = 0; i < containers.length; i++) {
+      // Get List
+      var container = containers[i][0];
+      var itemData = containers[i][1];
+      var list = Object.keys(container);
+      // Go through container list
+      for (var i2 = 0; i2 < list.length; i2++) {
+        // Get ID
+        var id = list[i2];
+        // Get Item
+        var item = itemData[id];
+        // If Item exists but does not match the world index
+        if (item && item.meta.WorldIndex && Number(item.meta.WorldIndex) !== world) {
+          // Delete Item from container
+          delete container[id];
+        };
+      };
+    };
+  };  
+};
 //=============================================================================
 // * Get Number of Items available in battle
 //=============================================================================
