@@ -1,15 +1,9 @@
 # omori-randomizer
 A project that focuses on randomizing various elements in the indie RPG, OMORI.
 
---OMORI Randomizer v0.13.1a--
-
-Latest patch notes:
-
-Disabled function that switches Headspace and Faraway inventories. It is recommended that you either start a new game
-or load a file currently in Headspace to keep the Headspace
-inventory.
-
-Probably actually fixed the yaml messages not showing the randomized item.
+Currently randomized: Non-key items, weapons, and charms
+Shop inventories and prices
+Battle drops
 
 How to use:
 
