@@ -641,85 +641,85 @@ def edit_yaml(y):
 
 def randomize_map_data(file):
     if file.startswith("Map"):
-            if file != 'MapInfos.json':
-                with open(os.path.join(paths.randopath, file), encoding='utf-8') as data_file:
-                    print(f"{file}")
-                    data = json.load(data_file)
-                    events = data['events']
-                    for event in events:
-                        if event != None:
-                            if event['id']:
-                                if (file == 'Map346.json' and event['id'] == 264):
-                                    continue
-                                for page in event['pages']:
-                                    toYamlCounter = 0
-                                    lastItemName = ""
-                                    lastMsg = ""
-                                    for item in page['list']:                                        
-                                        if item['code'] == 356:
-                                            if item['parameters'][0].startswith("ShowMessage "):
-                                                nextLastMsg = lastMsg
-                                                lastMsg = item['parameters'][0].split(" ")[1]
-                                                if (toYamlCounter <= 2 and lastItemName != ""):
-                                                    if lastMsg not in msg_dict.keys():
-                                                        msg_dict[lastMsg] = lastItemName
-                                                        toYamlCounter = 0
-                                        if item['code'] == 126:
-                                            if item['parameters'][1] == 0:
-                                                if not any(item['parameters'][0] in i for i in keyitemlist):
-                                                    itemID, itemName, listType = randomSelect()
-                                                    if listType == 1:
-                                                        item['code'] = 127
-                                                    elif listType == 2:
-                                                        item['code'] = 128
-                                                    item['parameters'][0] = itemID
-                                                    lastItemName = itemName
-                                                    toYamlCounter += 1
-                                                    if (lastMsg != "" and lastMsg not in msg_dict.keys() and toYamlCounter <= 2):
-                                                        msg_dict[lastMsg] = lastItemName                                                                                                                                                                        
-                                        elif item['code'] == 127:
-                                            if item['parameters'][1] == 0:
-                                                if item['parameters'][0] not in [2, 10, 11, 12, 14, 61, 110, 113]:
-                                                    itemID, itemName, listType = randomSelect()
-                                                    if listType == 0:
-                                                        item['code'] = 126
-                                                    elif listType == 2:
-                                                        item['code'] = 128
-                                                    item['parameters'][0] = itemID
-                                                    lastItemName = itemName
-                                                    toYamlCounter += 1
-                                                    if (lastMsg != "" and lastMsg not in msg_dict.keys() and toYamlCounter <= 2):
-                                                        msg_dict[lastMsg] = lastItemName   
-                                        elif item['code'] == 128:
-                                            if item['parameters'][1] == 0:
+        if file != 'MapInfos.json':
+            with open(os.path.join(paths.randopath, file), encoding='utf-8') as data_file:
+                print(f"{file}")
+                data = json.load(data_file)
+                events = data['events']
+                for event in events:
+                    if event != None:
+                        if event['id']:
+                            if (file == 'Map346.json' and event['id'] == 264):
+                                continue
+                            for page in event['pages']:
+                                toYamlCounter = 0
+                                lastItemName = ""
+                                lastMsg = ""
+                                for item in page['list']:
+                                    if item['code'] == 356:
+                                        if item['parameters'][0].startswith("ShowMessage "):
+                                            nextLastMsg = lastMsg
+                                            lastMsg = item['parameters'][0].split(" ")[1]
+                                            if (toYamlCounter <= 2 and lastItemName != ""):
+                                                if lastMsg not in msg_dict.keys():
+                                                    msg_dict[lastMsg] = lastItemName
+                                                    toYamlCounter = 0
+                                    if item['code'] == 126:
+                                        if item['parameters'][1] == 0:
+                                            if not any(item['parameters'][0] in i for i in keyitemlist):
                                                 itemID, itemName, listType = randomSelect()
-                                                if listType == 0:
-                                                    item['code'] = 126
-                                                elif listType == 1:
+                                                if listType == 1:
                                                     item['code'] = 127
+                                                elif listType == 2:
+                                                    item['code'] = 128
                                                 item['parameters'][0] = itemID
                                                 lastItemName = itemName
                                                 toYamlCounter += 1
-                                                if (lastMsg != "" and lastMsg not in msg_dict.keys() and toYamlCounter <= 2):                                                    
-                                                    msg_dict[lastMsg] = lastItemName
-                                                elif lastMsg == "sidequest_dreamworld_rabbitkiller.message_16":
-                                                        msg_dict[nextLastMsg] = lastItemName
-                                        elif item['code'] in [302, 605]:
-                                            if event['id'] == 71:
-                                                if item['code'] == 302:
-                                                    continue
+                                                if (lastMsg != "" and lastMsg not in msg_dict.keys() and toYamlCounter <= 2):
+                                                    msg_dict[lastMsg] = lastItemName                                                                                                                                                                        
+                                    elif item['code'] == 127:
+                                        if item['parameters'][1] == 0:
+                                            if item['parameters'][0] not in [2, 10, 11, 12, 14, 61, 110, 113]:
+                                                itemID, itemName, listType = randomSelect()
+                                                if listType == 0:
+                                                    item['code'] = 126
+                                                elif listType == 2:
+                                                    item['code'] = 128
+                                                item['parameters'][0] = itemID
+                                                lastItemName = itemName
+                                                toYamlCounter += 1
+                                                if (lastMsg != "" and lastMsg not in msg_dict.keys() and toYamlCounter <= 2):
+                                                    msg_dict[lastMsg] = lastItemName   
+                                    elif item['code'] == 128:
+                                        if item['parameters'][1] == 0:
                                             itemID, itemName, listType = randomSelect()
-                                            if listType == 1:
-                                                item['parameters'][0] = 1
-                                            elif listType == 2:
-                                                item['parameters'][0] = 2
-                                            item['parameters'][1] = itemID
-                                            item['parameters'][2] = 0
-                                            # item['parameters'][3] = random.randint(1, 1000)
+                                            if listType == 0:
+                                                item['code'] = 126
+                                            elif listType == 1:
+                                                item['code'] = 127
+                                            item['parameters'][0] = itemID
+                                            lastItemName = itemName
                                             toYamlCounter += 1
+                                            if (lastMsg != "" and lastMsg not in msg_dict.keys() and toYamlCounter <= 2):                                                    
+                                                msg_dict[lastMsg] = lastItemName
+                                            elif lastMsg == "sidequest_dreamworld_rabbitkiller.message_16":
+                                                    msg_dict[nextLastMsg] = lastItemName
+                                    elif item['code'] in [302, 605]:
+                                        if event['id'] == 71:
+                                            if item['code'] == 302:
+                                                continue
+                                        itemID, itemName, listType = randomSelect()
+                                        if listType == 1:
+                                            item['parameters'][0] = 1
+                                        elif listType == 2:
+                                            item['parameters'][0] = 2
+                                        item['parameters'][1] = itemID
+                                        item['parameters'][2] = 0
+                                        # item['parameters'][3] = random.randint(1, 1000)
+                                        toYamlCounter += 1
 
-                with open(os.path.join(paths.randopath, file), mode="w", encoding="utf-8") as updatedFile:
-                    json.dump(data, updatedFile)
+            with open(os.path.join(paths.randopath, file), mode="w", encoding="utf-8") as updatedFile:
+                json.dump(data, updatedFile)
     
     return f'{file} randomized!'
 
@@ -802,7 +802,18 @@ def Main():
         data = json.load(eventFile)
         for event in data:
             if event != None:
+                toYamlCounter = 0
+                lastItemName = ""
+                lastMsg = ""
                 for item in event['list']:
+                    if item['code'] == 356:
+                        if item['parameters'][0].startswith("ShowMessage "):
+                            nextLastMsg = lastMsg
+                            lastMsg = item['parameters'][0].split(" ")[1]
+                            # if lastItemName != "":
+                            #     if lastMsg not in msg_dict.keys():
+                            #         msg_dict[lastMsg] = lastItemName
+                            #         toYamlCounter = 0
                     if item['code'] == 126:
                         if item['parameters'][1] == 0:
                             if not any(item['parameters'][0] in i for i in keyitemlist):
@@ -812,6 +823,10 @@ def Main():
                                 elif listType == 2:
                                     item['code'] = 128
                                 item['parameters'][0] = itemID
+                                lastItemName = itemName
+                                toYamlCounter += 1
+                                if (lastMsg != "" and lastMsg not in msg_dict.keys()):
+                                    msg_dict[lastMsg] = lastItemName
                     elif item['code'] == 127:
                         if item['parameters'][1] == 0:
                             if item['parameters'][0] not in [2, 10, 11, 12, 14, 61, 110]:
@@ -821,6 +836,10 @@ def Main():
                                 elif listType == 2:
                                     item['code'] = 128
                                 item['parameters'][0] = itemID
+                                lastItemName = itemName
+                                toYamlCounter += 1
+                                if (lastMsg != "" and lastMsg not in msg_dict.keys()):
+                                    msg_dict[lastMsg] = lastItemName 
                     elif item['code'] == 128:
                         if item['parameters'][1] == 0:
                             itemID, itemName, listType = randomSelect()
@@ -829,6 +848,10 @@ def Main():
                             elif listType == 1:
                                 item['code'] = 127
                             item['parameters'][0] = itemID
+                            lastItemName = itemName
+                            toYamlCounter += 1
+                            if (lastMsg != "" and lastMsg not in msg_dict.keys()):
+                                msg_dict[lastMsg] = lastItemName 
                     elif item['code'] in [302, 605]:
                         itemID, itemName, listType = randomSelect()
                         if listType == 1:
@@ -837,7 +860,6 @@ def Main():
                             item['parameters'][0] = 2
                         item['parameters'][1] = itemID
                         item['parameters'][2] = 0
-                        # item['parameters'][3] = random.randint(1, 1000)
 
     with open(os.path.join(paths.randopath, 'CommonEvents.json'), mode='w', encoding='utf-8') as updatedEventFile:
         json.dump(data, updatedEventFile)
@@ -872,7 +894,7 @@ if __name__ == '__main__':
                     [sg.Button('Close', key='closebutton')] ]
 
         # Create the Window
-        window = sg.Window('OMORI Randomizer v0.13.2a', layout, finalize=True)
+        window = sg.Window('OMORI Randomizer v0.14a', layout, finalize=True)
         progress_text = window['progtext']
         folder_field = window['folderinput']
         randomize_button = window['randobutton']

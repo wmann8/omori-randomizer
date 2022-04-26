@@ -6,6 +6,7 @@
         
             //put randomization code here
             console.log('lol');
+            $gameParty.changeWorldItemContainer(1);
 
             const itemlist = [[13, 'TOFU', 0],
             [14, 'CANDY', 0],
@@ -547,45 +548,15 @@
             function getRandomInt(max) {
                 min = Math.ceil(0);
                 max = Math.floor(max);
-                return Math.floor(math.random() * (max - min) + min);
+                return Math.floor(Math.random() * (max - min) + min);
             }
 
             if(!$gameSystem.randomized) {
-                DW_Kel = $gameActors.actor(3);
-                DW_Hero = $gameActors.actor(4);
-                DW_Kel_Equips = DW_Kel.equips();
-                DW_Hero_Equips = DW_Hero.equips();
-                for(let i = 0; i < DW_Kel_Equips.length; i++){
-                    DW_Kel_Equips[i]["_dataClass"] = "";
-                    DW_Kel_Equips[i]["_itemID"] = 0;
-                }
-                for(let i = 0; i < DW_Hero_Equips.length; i++){
-                    DW_Hero_Equips[i]["_dataClass"] = "";
-                    DW_Hero_Equips[i]["_itemID"] = 0;
-                }
-                inventory = $gameParty.items();
-                weapons = $gameParty.weapons();
-                charmors = $gameParty.armors();
-                for(key of Object.entries(inventory)){
-                    if(key != "@c"){
-                        for(let i = 0; i < keyitemlist.length; i++){
-                            if(keyitemlist[i][0] == key){break;}
-                        }
-                        if(i == keyitemlist.length){
-                            delete inventory.key;
-                        }
-                    }
-                }
-                for(key of Object.entries(weapons)){
-                    if(key != "@c"){
-                        delete weapons.key;
-                    }
-                }
-                for(key of Object.entries(charmors)){
-                    if(key != "@c"){
-                        delete charmors.key;
-                    }
-                }
+                $gameParty.initAllItems();
+                $gameParty.loseItem($dataWeapons[28], 1, true);
+                $gameParty.loseItem($dataWeapons[45], 1, true);
+                $gameParty.loseItem($dataArmors[50], 1, true);
+
                 randList = [];
 
                 for(let i = 0; i < 3; i++){
@@ -601,7 +572,21 @@
                     }
                     randSelect = getRandomInt(randList.length);
                     // TODO: Figure out how to actually add the items here!
+                    randSelectInner = randList[randSelect][0]
+
+                    if(listType == 0){
+                        $gameParty.gainItem($dataItems[randSelectInner], 1);
+                    }
+                    else if(listType == 1){
+                        $gameParty.gainItem($dataWeapons[randSelectInner], 1);
+                    }
+                    else{
+                        $gameParty.gainItem($dataArmors[randSelectInner], 1);
+                    }
                 }
+
+                $gameParty.gainItem($dataWeapons[2], 1);
+                $gameParty.gainItem($dataWeapons[14], 1);
 
                 $gameSystem.randomized = true;
             }
