@@ -316,7 +316,7 @@ message_101:
 
 #Yes
 message_102:
-      text: \n<WYTAMAN>Lmao gotcha. Thanks for playing the randomizer!
+      text: \n<ValerieVG>Lmao gotcha. Thanks for playing the randomizer!
 
 #no
 message_103:
@@ -342,7 +342,7 @@ message_109:
       text: \n<GOOMAN>Unfortunately, the price has gone up since we last spoke... It's \v[635] now, but I hope you'll still accept my offer! Heh heh...\$
 
 message_94:
-      text: You got a \c[3]BOTTLED WATER\c[0] for free!
+      text: You got a \c[3]BOTTLED WATER\c[0]!
 
 # =========================================================================================
 # Sno-cone JASH
@@ -587,6 +587,9 @@ message_164:
       text: You don't have enough room in your POCKET.
 
 message_163:
+      text: A cold \c[3]TASTY SODA\c[0] popped out from the vending machine!
+
+message_163_1:
       text: A cold \c[3]TASTY SODA\c[0] popped out from the vending machine!
 
 #Examine when Sold out

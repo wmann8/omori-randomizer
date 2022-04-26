@@ -1442,7 +1442,7 @@ message_647:
       text: The CLAM fell straight to the bottom.
 
 message_648:
-      text: You picked up a \c[5]PEARL\c[0].
+      text: You picked up a \c[5]\itemget\c[0].
 
 message_649:
       text: You don't have any CLAMS.

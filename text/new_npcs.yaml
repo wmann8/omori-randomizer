@@ -1190,6 +1190,15 @@ message_263:
 message_264:
       text: You got \c[3]TOFU\c[0]!
 
+message_264_1:
+      text: You got \c[3]TOFU\c[0]!
+
+message_264_2:
+      text: You got \c[3]TOFU\c[0]!
+
+message_264_3:
+      text: You got \c[3]TOFU\c[0]!
+
 message_265:
       text: \n<BUTLER MOLE>Hey, man... You okay?\! You got no color in your face!
 
