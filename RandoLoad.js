@@ -94,8 +94,7 @@
             [107, 'HERO SANDWICH', 0],
             [108, 'CARAMEL APPLE', 0],
             [109, 'WHOLE PIZZA', 0],
-            [110, 'PIE', 0],
-            [111, 'BIG BAG OF CANDY', 0],
+            [110, 'PIE', 0],            
             [112, 'SLICE OF CAKE', 0],
             [113, 'BANDAGE', 1],
             [114, 'FIRST AID KIT', 1],
@@ -108,6 +107,7 @@
 
             const keyitemlist = [[2, 'COLD STEAK', 5],
             [3, 'MICROWAVED STEAK', 5],
+            [111, 'BIG BAG OF CANDY', 0],
             [115, 'HAMBURGER', 5],
             [116, 'MEAT', 5],
             [117, 'FISH', 5],
@@ -551,42 +551,112 @@
                 return Math.floor(Math.random() * (max - min) + min);
             }
 
+            function parseINIString(data){
+                var regex = {
+                    section: /^\s*\[\s*([^\]]*)\s*\]\s*$/,
+                    param: /^\s*([^=]+?)\s*=\s*(.*?)\s*$/,
+                    comment: /^\s*;.*$/
+                };
+                var value = {};
+                var lines = data.split(/[\r\n]+/);
+                var section = null;
+                lines.forEach(function(line){
+                    if(regex.comment.test(line)){
+                        return;
+                    }else if(regex.param.test(line)){
+                        var match = line.match(regex.param);
+                        if(section){
+                            value[section][match[1]] = match[2];
+                        }else{
+                            value[match[1]] = match[2];
+                        }
+                    }else if(regex.section.test(line)){
+                        var match = line.match(regex.section);
+                        value[match[1]] = {};
+                        section = match[1];
+                    }else if(line.length == 0 && section){
+                        section = null;
+                    };
+                });
+                return value;
+            }
+
+            var fs = require("fs");
+
+            const path = require("path");
+            const base = path.dirname(process.mainModule.filename);
+            var config = base.concat("/mods/randomizeralpha/randoConfig.ini");
+
+            var data = fs.readFileSync(config, 'utf8');
+
+            var configFile = parseINIString(data)
+
             if(!$gameSystem.randomized) {
-                $gameParty.initAllItems();
-                $gameParty.loseItem($dataWeapons[28], 1, true);
-                $gameParty.loseItem($dataWeapons[45], 1, true);
-                $gameParty.loseItem($dataArmors[50], 1, true);
+                if(configFile['rando']['inventoryrando'] == 'true'){
+                    $gameParty.initAllItems();
+                    $gameParty.loseItem($dataWeapons[28], 1, true);
+                    $gameParty.loseItem($dataWeapons[45], 1, true);
+                    $gameParty.loseItem($dataArmors[50], 1, true);
 
-                randList = [];
+                    randList = [];
 
-                for(let i = 0; i < 3; i++){
-                    listType = getRandom();
-                    if(listType == 0){
-                        randList = itemlist;
-                    }
-                    else if(listType == 1){
-                        randList = weaponlist;
-                    }
-                    else{
-                        randList = armorlist;
-                    }
-                    randSelect = getRandomInt(randList.length);
-                    // TODO: Figure out how to actually add the items here!
-                    randSelectInner = randList[randSelect][0]
+                    for(let i = 0; i < 3; i++){
+                        listType = getRandom();
+                        if(listType == 0){
+                            randList = itemlist;
+                        }
+                        else if(listType == 1){
+                            randList = weaponlist;
+                        }
+                        else{
+                            randList = armorlist;
+                        }
+                        randSelect = getRandomInt(randList.length);
+                        randSelectInner = randList[randSelect][0]
 
-                    if(listType == 0){
-                        $gameParty.gainItem($dataItems[randSelectInner], 1);
-                    }
-                    else if(listType == 1){
-                        $gameParty.gainItem($dataWeapons[randSelectInner], 1);
-                    }
-                    else{
-                        $gameParty.gainItem($dataArmors[randSelectInner], 1);
+                        if(listType == 0){
+                            $gameParty.gainItem($dataItems[randSelectInner], 1);
+                        }
+                        else if(listType == 1){
+                            $gameParty.gainItem($dataWeapons[randSelectInner], 1);
+                        }
+                        else{
+                            $gameParty.gainItem($dataArmors[randSelectInner], 1);
+                        }
                     }
                 }
 
-                $gameParty.gainItem($dataWeapons[2], 1);
-                $gameParty.gainItem($dataWeapons[14], 1);
+                if(configFile['rando']['skillrando'] == 'true'){
+                    $gameActors.actor(1).unequipSkill(0)
+                    $gameActors.actor(1).unequipSkill(2)
+                    $gameActors.actor(1).forgetSkill(26)
+                    $gameActors.actor(1).forgetSkill(27)
+
+                    $gameActors.actor(2).unequipSkill(0)
+                    $gameActors.actor(2).forgetSkill(68)
+
+                    $gameActors.actor(3).unequipSkill(0)
+                    $gameActors.actor(3).forgetSkill(107)
+                    
+                    $gameActors.actor(4).unequipSkill(0)
+                    $gameActors.actor(4).unequipSkill(2)
+                    $gameActors.actor(4).forgetSkill(147)
+                    $gameActors.actor(4).forgetSkill(148)
+
+
+                    for (const [key, value] of Object.entries(configFile['OMORI'])){
+                        $gameActors.actor(1).learnSkill(value)
+                    }
+                    for (const [key, value] of Object.entries(configFile['AUBREY'])){
+                        $gameActors.actor(2).learnSkill(value)
+                    }
+                    for (const [key, value] of Object.entries(configFile['KEL'])){
+                        $gameActors.actor(3).learnSkill(value)
+                    }
+                    for (const [key, value] of Object.entries(configFile['HERO'])){
+                        $gameActors.actor(4).learnSkill(value)
+                    }
+                }
 
                 $gameSystem.randomized = true;
             }
@@ -619,3 +689,4 @@
     };
 
 })();//causes this function to run immediately
+
