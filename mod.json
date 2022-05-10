@@ -1,8 +1,8 @@
 {
-    "id": "randomizeralpha",
+    "id": "omori-randomizer-0.15.2a",
     "name": "Randomizer Alpha",
     "description": "Valerie's first randomizer! Hello world!",
-    "version": "0.15.1a",
+    "version": "0.15.2a",
     "files": {
         "plugins": [
             "ac9eb0f9-4f04-4a25-a65e-aa5eb0772391.js",

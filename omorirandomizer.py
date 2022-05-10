@@ -1563,15 +1563,15 @@ def randomize_map_data(file):
                                             if event['id'] == 71:
                                                 if item['code'] == 302:
                                                     continue
-                                            itemID, itemName, listType = randomSelect()
-                                            if listType == 1:
-                                                item['parameters'][0] = 1
-                                            elif listType == 2:
-                                                item['parameters'][0] = 2
-                                            item['parameters'][1] = itemID
-                                            item['parameters'][2] = 0
-                                            # item['parameters'][3] = random.randint(1, 1000)
-                                            toYamlCounter += 1
+                                            if not any(item['parameters'][1] in i for i in keyitemlist):
+                                                itemID, itemName, listType = randomSelect()
+                                                if listType == 1:
+                                                    item['parameters'][0] = 1
+                                                elif listType == 2:
+                                                    item['parameters'][0] = 2
+                                                item['parameters'][1] = itemID
+                                                item['parameters'][2] = 0
+                                                toYamlCounter += 1
 
                 with open(os.path.join(paths.randopath, file), mode="w", encoding="utf-8") as updatedFile:
                     json.dump(data, updatedFile)
@@ -1959,7 +1959,7 @@ if __name__ == '__main__':
                     [sg.Text('', key='progtext')],
                     [sg.Button('Close', key='closebutton'), sg.Text('*Only happens on first load')] ]
         
-        window = sg.Window('OMORI Randomizer v0.15.1a', layout, finalize=True)
+        window = sg.Window('OMORI Randomizer v0.15.2a', layout, finalize=True)
         progress_text = window['progtext']
         folder_field = window['folderinput']
         randomize_button = window['randobutton']
