@@ -626,7 +626,7 @@
                     }
                 }
 
-                if(configFile['rando']['skillrando'] == 'true'){
+                if(configFile['rando']['learnedrando'] == 'true'){
                     $gameActors.actor(1).unequipSkill(0)
                     $gameActors.actor(1).unequipSkill(2)
                     $gameActors.actor(1).forgetSkill(26)

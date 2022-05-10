@@ -1390,17 +1390,17 @@ def randomizePrice(jsonFile, randopath):
 def closeWindow():
     window.destroy()
 
-def randoButton_Click(itemrando, skillrando, inventoryrando):
+def randoButton_Click(itemrando, skillrando, inventoryrando, learnedrando):
 
     try:
 
         config = configparser.ConfigParser()
         config['rando'] = {}
 
-        if skillrando:
-            config['rando']['skillrando'] = 'true'
+        if learnedrando:
+            config['rando']['learnedrando'] = 'true'
         else:
-            config['rando']['skillrando'] = 'false'
+            config['rando']['learnedrando'] = 'false'
         if inventoryrando:
             config['rando']['inventoryrando'] = 'true'
         else:
@@ -1766,6 +1766,8 @@ def randomizePlayerSkills(config):
         [184, "ShowMessage XX_OCEAN.message_535"],
         [185, "ShowMessage XX_OCEAN.message_536"]]
 
+        quickActorDict = {1: "OMORI", 2: "AUBREY", 3: "KEL", 4: "HERO"}
+
         with open(os.path.join(paths.yamlrandopath, "XX_OCEAN.yaml"), encoding='utf-8') as yamlFile:
             data = yaml.safe_load(yamlFile)
             for x in range(6):
@@ -1781,8 +1783,7 @@ def randomizePlayerSkills(config):
 
                 melonSkillList[x].append(randActor)
                 melonSkillList[x].append(randSkillId)
-
-                quickActorDict = {1: "OMORI", 2: "AUBREY", 3: "KEL", 4: "HERO"}
+                
                 forbiddenSkillList = [2, 46, 49, 52, 86, 89, 92, 126, 129, 132, 168, 171, 174]
 
                 splitList = melonSkillList[x][1].split(".")
@@ -1790,8 +1791,26 @@ def randomizePlayerSkills(config):
         
         with open(os.path.join(paths.yamlrandopath, "XX_OCEAN.yaml"), mode='w', encoding='utf-8') as updatedYaml:
             yaml.dump(data, updatedYaml)
+
+        #TODO: Pluto(Map124), Man on Fire(Map332), Gator Guy sculptor(Map197), Berly(Map92), Shawn(Map490), Fears(Maps 440, 441, 443), Red Hand(Map87) skill rando logic here!
+
+        characterSkillList = [["Map124.json", 12, "pluto.yaml", "message_142"], ["Map332.json", 3, "dreamworld_npc_dialogue_orangeoasis.yaml", "message_12"],
+        ["Map197.json", 43, "art_sculpture.yaml", "message_112"], ["Map092.json", 25, "dreamworld_npc_dialogue_playground.yaml", "message_86"],
+        ["Map490.json", 2, "dreamworld_npc_dialogue_playground.yaml", "message_21"], ["Map440.json", 8, "XX_MELON.yaml", "message_815"],
+        ["Map441.json", 51, "XX_MELON.yaml", "message_814"], ["Map443.json", 4, "XX_MELON.yaml", "message_816"], ["Map087.json", 14, "01_map_whitespace.yaml", "message_125"]]
+
+        for l in characterSkillList:
+            l = randomizeCharacterSkills(l, quickActorDict)
+
+            with open(os.path.join(paths.yamlrandopath, l[2]), encoding='utf-8') as yamlFile:
+                data = yaml.safe_load(yamlFile)
+                data[l[3]]['text'] = f"{l[4]} learned \c[1]{l[5]}\c[0]!"
+
+            with open(os.path.join(paths.yamlrandopath, l[2]), mode='w', encoding='utf-8') as updatedYaml:
+                yaml.dump(data, updatedYaml)
+
         with open(os.path.join(paths.randopath, "Classes.json"), encoding='utf-8') as file:
-            data = json.load(file)            
+            data = json.load(file)
             for cls in data:
                 if cls != None:
                     if cls['id'] in (1, 2, 3, 4):
@@ -1819,6 +1838,36 @@ def randomizePlayerSkills(config):
         print(f'This error occurred during randomization, {type}, {value}, {traceback.tb_lineno}')
 
     return (melonSkillList, config)
+
+def randomizeCharacterSkills(l, quickActorDict):
+    with open(os.path.join(paths.randopath, l[0]), encoding='utf-8') as file:
+                data = json.load(file)
+                for event in data['events']:
+                    if event != None:
+                        if event['id'] == l[1]:
+                            for page in event['pages']:
+                                for item in page['list']:
+                                    if item['code'] == 318:
+                                        randActor = random.randint(1, 4)
+
+                                        while True:
+                                            randSelectInner = random.randint(0, len(playerSkillList) - 1)
+                                            randSkillId = playerSkillList[randSelectInner][0]
+                                            
+                                            if playerSkillList[randSelectInner][2] == False:
+                                                playerSkillList[randSelectInner][2] = True
+                                                break
+
+                                        item['parameters'][1] = randActor
+                                        item['parameters'][3] = randSkillId
+
+                                        l.append(quickActorDict[randActor])
+                                        l.append(playerSkillList[randSelectInner][1])
+
+                                        with open(os.path.join(paths.randopath, l[0]), mode='w', encoding='utf-8') as updatedFile:
+                                            json.dump(data, updatedFile)
+
+                                        return l
 
 def randomizeWepSkillLoc(melonSkillList = []):
 
@@ -1904,15 +1953,18 @@ if __name__ == '__main__':
 
         layout = [  [sg.InputText(default_text=os.getcwd(), key='folderinput'), sg.Button('Browse')],
                     [sg.Button('Randomize!', key='randobutton'), sg.Checkbox('Randomize Items/Weapons/Charms', key='itemrando', default=True),
-                    sg.Checkbox('Randomize Party Skills', key='skillrando'), sg.Checkbox('Randomize Inventory on Load*', key='inventoryrando')],
+                    sg.Checkbox('Randomize Party Skills', key='skillrando', enable_events=True)],
+                    [sg.Checkbox('Randomize Inventory on Load*', key='inventoryrando'),
+                    sg.Checkbox('Randomize Already Learned Skills on Load*', key='learnedrando', disabled=True)],
                     [sg.Text('', key='progtext')],
                     [sg.Button('Close', key='closebutton'), sg.Text('*Only happens on first load')] ]
         
-        window = sg.Window('OMORI Randomizer v0.15a', layout, finalize=True)
+        window = sg.Window('OMORI Randomizer v0.15.1a', layout, finalize=True)
         progress_text = window['progtext']
         folder_field = window['folderinput']
         randomize_button = window['randobutton']
         close_button = window['closebutton']
+        learned_checkbox = window['learnedrando']
 
         while True:
             event, values = window.read()
@@ -1921,13 +1973,20 @@ if __name__ == '__main__':
                 break
             if event == 'Browse':
                 browse_files()
+            if event == 'skillrando':
+                if values['skillrando'] == True:
+                    learned_checkbox(disabled=False)
+                else:
+                    learned_checkbox(disabled=True)
+                    window['learnedrando'].update(False)
             if event == 'randobutton':
                 itemrando = values['itemrando']
                 skillrando = values['skillrando']
                 inventoryrando = values['inventoryrando']
+                learnedrando = values['learnedrando']
                 progress_text.update("Randomizing data. Please wait...")
                 window.Refresh()
-                randoButton_Click(itemrando, skillrando, inventoryrando)
+                randoButton_Click(itemrando, skillrando, inventoryrando, learnedrando)
             
 
         window.close()
