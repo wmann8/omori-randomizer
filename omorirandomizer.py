@@ -1959,7 +1959,7 @@ if __name__ == '__main__':
                     [sg.Text('', key='progtext')],
                     [sg.Button('Close', key='closebutton'), sg.Text('*Only happens on first load')] ]
         
-        window = sg.Window('OMORI Randomizer v0.15.2a', layout, finalize=True)
+        window = sg.Window('OMORI Randomizer v0.15.3a', layout, finalize=True)
         progress_text = window['progtext']
         folder_field = window['folderinput']
         randomize_button = window['randobutton']
