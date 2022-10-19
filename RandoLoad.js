@@ -585,7 +585,7 @@
 
             const path = require("path");
             const base = path.dirname(process.mainModule.filename);
-            var config = base.concat("/mods/omori-randomizer-0.15.3a/randoConfig.ini");
+            var config = base.concat("/mods/randomizeralpha/randoConfig.ini");
 
             var data = fs.readFileSync(config, 'utf8');
 
